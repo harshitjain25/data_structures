@@ -18,6 +18,7 @@ struct node *create()
     start->coef = c;
     start->po = k;
     start->next = NULL;
+    p = start;
     for (int i = k - 1; i >= 0; i--)
     {
         printf("Enter coefficient for power %d ", i);
@@ -29,49 +30,73 @@ struct node *create()
             p1->coef = c;
             p1->po = i;
             p1->next = NULL;
+            p->next = p1;
+            p = p->next;
         }
     }
     return start;
 }
 struct node *add(struct node *k1, struct node *k2)
 {
-    struct node *p1 = NULL, *p2 = NULL, *p3 = NULL, *p = NULL,*k3 = NULL;
+    struct node *p1 = NULL, *p2 = NULL, *p3 = NULL, *p = NULL, *k3 = NULL;
     p1 = k1;
     p2 = k2;
     p3 = (struct node *)malloc(sizeof(struct node));
-    k3=p3;
+    k3 = p3;
     while (p1 != NULL && p2 != NULL)
     {
         if (p1->po > p2->po)
         {
             p3->coef = p1->coef;
             p3->po = p1->po;
-            p = (struct node *)malloc(sizeof(struct node));
-            p->next=NULL;
-            p3->next = p;
-            p3 = p3->next;
             p1 = p1->next;
         }
         else if (p1->po < p2->po)
         {
             p3->coef = p2->coef;
             p3->po = p2->po;
-            p = (struct node *)malloc(sizeof(struct node));
-            p->next=NULL;
-            p3->next = p;
-            p3 = p3->next;
             p2 = p2->next;
         }
         else
         {
             p3->po = p2->po;
             p3->coef = p1->coef + p2->coef;
-            p = (struct node *)malloc(sizeof(struct node));
-            p->next=NULL;
-            p3->next = p;
-            p3 = p3->next;
             p2 = p2->next;
             p1 = p1->next;
+        }
+        if (p1 != NULL || p2 != NULL)
+        {
+            p = (struct node *)malloc(sizeof(struct node));
+            p->next = NULL;
+            p3->next = p;
+            p3 = p3->next;
+        }
+    }
+
+    while (p1 != NULL)
+    {
+        p3->coef = p1->coef;
+        p3->po = p1->po;
+        p1 = p1->next;
+        if (p1 != NULL)
+        {
+            p = (struct node *)malloc(sizeof(struct node));
+            p->next = NULL;
+            p3->next = p;
+            p3 = p3->next;
+        }
+    }
+    while (p2 != NULL)
+    {
+        p3->coef = p2->coef;
+        p3->po = p2->po;
+        p2 = p2->next;
+        if (p2 != NULL)
+        {
+            p = (struct node *)malloc(sizeof(struct node));
+            p->next = NULL;
+            p3->next = p;
+            p3 = p3->next;
         }
     }
     return k3;
@@ -81,7 +106,7 @@ int main()
     struct node *s1, *s2, *s3, *p;
     s1 = create();
     printf("second polynimial\n");
-        s2 = create();
+    s2 = create();
     s3 = add(s1, s2);
     p = s3;
     while (p != NULL)
